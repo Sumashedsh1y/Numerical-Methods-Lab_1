@@ -78,5 +78,38 @@ int main()
 		y2C[i] = Chebyshev(i,size,a,b);
 	}
 
+	for (int i = 0; i < size; i++) {
+		double z = i * (b - a) / size;
+		x2L[i] = z;
+		y2L[i] = func(z);
+	}
+
+	double  maxdeltaC = 0, maxdeltaL = 0;
+
+	ofstream fout("Chebyshev (1.2.1).txt");
+	for (int i = 0; i < d; i++) {
+		double z = i * (b - a) / d;
+		delta = abs(func(z) - Lagrange(size, z, x2C, y2C));
+		fout << i << "\t" << delta << endl;
+		if (delta > maxdeltaC) {
+			maxdeltaC = delta;
+		}
+	}
+	fout.close();
+
+	ofstream fout("Lagrange (1.2.2).txt");
+	for (int i = 0; i < d; i++) {
+		double z = i * (b - a) / d;
+		delta = abs(func(z) - Lagrange(size, z, x2L, y2L));
+		fout << i << "\t" << delta << endl;
+		if (delta > maxdeltaL) {
+			maxdeltaL = delta;
+		}
+	}
+	fout.close();
+
+	cout << "\n" << "maxDeltaChebyshev = " << maxdeltaC << endl;
+	cout << "\n" << "maxDeltaLagrange = " << maxdeltaL << endl;
+
 	return 0;
 }
