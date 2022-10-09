@@ -48,12 +48,11 @@ int main()
 
 	double d = 10000;
 	double delta, maxdelta = 0;
-
-	ofstream fout("Lagrange (1.1).txt");
+	ofstream f("Lagrange (1.1).txt");
 	for (int i = 0; i < d; i++) {
 		double z = i * (b - a) /d;
 		delta = abs(func(z) - Lagrange(size, z, x1, y1));
-		fout << i << "\t" << delta << endl;
+		f << i << "\t" << delta << endl;
 		if (delta > maxdelta) {
 			maxdelta = delta;
 		}
@@ -61,21 +60,19 @@ int main()
 
 	cout << "\n" << "maxDelta = " << maxdelta << endl;
 
-	fout.close();
+	f.close();
 
 	cout << "\n1.2 CHEBYSHEV\n" << endl;
 
-	const int size = 15;
 	double x2C[size];
 	double y2C[size];
 	double x2L[size];
 	double y2L[size];
-	double a = 0, b = 1;
 
 	for (int i = 0; i < size; i++) {
 		double z = i * (b - a) / size;
-		x2C[i] = func(z);
-		y2C[i] = Chebyshev(i,size,a,b);
+		x2C[i] = Chebyshev(i, size, a, b);
+		y2C[i] = func(Chebyshev(i, size, a, b));
 	}
 
 	for (int i = 0; i < size; i++) {
@@ -86,27 +83,27 @@ int main()
 
 	double  maxdeltaC = 0, maxdeltaL = 0;
 
-	ofstream fout("Chebyshev (1.2.1).txt");
+	ofstream f2("Chebyshev (1.2.1).txt");
 	for (int i = 0; i < d; i++) {
 		double z = i * (b - a) / d;
 		delta = abs(func(z) - Lagrange(size, z, x2C, y2C));
-		fout << i << "\t" << delta << endl;
+		f2 << i << "\t" << delta << endl;
 		if (delta > maxdeltaC) {
 			maxdeltaC = delta;
 		}
 	}
-	fout.close();
+	f2.close();
 
-	ofstream fout("Lagrange (1.2.2).txt");
+	ofstream f3("Lagrange (1.2.2).txt");
 	for (int i = 0; i < d; i++) {
 		double z = i * (b - a) / d;
 		delta = abs(func(z) - Lagrange(size, z, x2L, y2L));
-		fout << i << "\t" << delta << endl;
+		f3 << i << "\t" << delta << endl;
 		if (delta > maxdeltaL) {
 			maxdeltaL = delta;
 		}
 	}
-	fout.close();
+	f3.close();
 
 	cout << "\n" << "maxDeltaChebyshev = " << maxdeltaC << endl;
 	cout << "\n" << "maxDeltaLagrange = " << maxdeltaL << endl;
