@@ -26,6 +26,29 @@ double Lagrange(int n, double X, double* x, double* y) {
 	}
 	return sigma;
 }
+
+double Newton(int n,double X, double* x, double* y) {
+
+	double S = y[0];
+	for (int i = 1; i < n; ++i) {
+
+		double F = 0;
+		for (int j = 0; j <= i; ++j) {
+
+			double d = 1;
+			for (int k = 0; k <= i; ++k)
+				if (k != j)
+					d *= (x[j] - x[k]);
+			F += y[j] / d;
+		}
+
+		for (int k = 0; k < i; ++k)
+			F *= (X - x[k]);
+		S += F;
+	}
+	return S;
+}
+
 int main()
 {
 	const int size = 15;
@@ -70,7 +93,6 @@ int main()
 	double y2L[size];
 
 	for (int i = 0; i < size; i++) {
-		double z = i * (b - a) / size;
 		x2C[i] = Chebyshev(i, size, a, b);
 		y2C[i] = func(Chebyshev(i, size, a, b));
 	}
@@ -107,6 +129,23 @@ int main()
 
 	cout << "\n" << "maxDeltaChebyshev = " << maxdeltaC << endl;
 	cout << "\n" << "maxDeltaLagrange = " << maxdeltaL << endl;
+
+	cout << "\n1.3 NEWTON\n" << endl;
+
+	double  maxdeltaN = 0;
+
+	ofstream f4("Newton (1.3).txt");
+	for (int i = 0; i < d; i++) {
+		double z = i * (b - a) / d;
+		delta = abs(Newton(size, z, x1, y1) - Lagrange(size, z, x1, y1));
+		f4 << i << "\t" << delta << endl;
+		if (delta > maxdeltaN) {
+			maxdeltaN = delta;
+		}
+	}
+	f4.close();
+
+	cout << "\n" << "maxDeltaNewton = " << maxdeltaN << endl;
 
 	return 0;
 }
