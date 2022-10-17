@@ -147,5 +147,7 @@ int main()
 
 	cout << "\n" << "maxDeltaNewton = " << maxdeltaN << endl;
 
+	cout << "\n1.4 TRIGONOMETRY\n" << endl;
+
 	return 0;
 }
