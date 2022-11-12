@@ -33,30 +33,25 @@ double Lagrange(int n, double X, vector<_XY_> XY) {
 	return sigma;
 }
 
-double Newton(int n,double X, vector<_XY_> XY) {
+double Newton(int n,double X, vector<_XY_> x, vector<vector<double>> V) {
 
-	double S = XY[0].y;
-	for (int i = 1; i < n; ++i) {
-
-		double F = 0;
-		for (int j = 0; j <= i; ++j) {
-
-			double d = 1;
-			for (int k = 0; k <= i; ++k)
-				if (k != j)
-					d *= (XY[j].x - XY[k].x);
-			F += XY[j].y / d;
+	for (int i = 1; i < n; i++) {
+		for (int j = 0; j < n - i; j++) {
+			V[i][j] = (V[i - 1][j + 1] - V[i - 1][j]) / (x[j + i].y - x[j].y);
 		}
-
-		for (int k = 0; k < i; ++k)
-			F *= (X - XY[k].x);
-		S += F;
 	}
+
+	double S = V[0][0];
+	double P = 1;
+	for (int i = 1; i < n; ++i) {
+		P *= (X - x[i - 1].y);
+		S += V[i][0] * P;
+	}
+
 	return S;
 }
 
-int main()
-{
+int main(){
 	const int size = 15;
 	vector<_XY_> XY(size);
 	double a = 0, b = 1;
@@ -135,12 +130,25 @@ int main()
 
 	cout << "\n1.3 NEWTON\n" << endl;
 
+	vector<vector<double>> V(size);
+
+	V[0].resize(size);
+	for (int i = 0; i < size; i++)
+		V[0][i] = XY[i].y;
+
+	for (int i = 1; i < size; i++) {
+		V[i].resize(size);
+		for (int j = 0; j < size; j++) {
+			V[i][j] = 0;
+		}
+	}
+
 	double  maxdeltaN = 0;
 
 	ofstream f4("Newton (1.3).txt");
 	for (int i = 0; i < d; i++) {
 		double z = i * (b - a) / d;
-		delta = abs(Newton(size, z, XY) - Lagrange(size, z, XY));
+		delta = abs(func(z) - Newton(size, z, XY, V));
 		f4 << i << "\t" << delta << endl;
 		if (delta > maxdeltaN) {
 			maxdeltaN = delta;
